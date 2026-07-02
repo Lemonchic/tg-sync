@@ -163,7 +163,10 @@ async def download_file(client: TelegramClient,
     async for x in downloaded:
         out.write(x)
         if progress_callback:
-            r = progress_callback(out.tell(), size)
+            active_conns = sum(1 for s in downloader.senders if s.remaining > 0) if downloader.senders else 0
+            if active_conns == 0 and out.tell() < size:
+                active_conns = 1
+            r = progress_callback(out.tell(), size, active_conns)
             if inspect.isawaitable(r):
                 await r
     return out

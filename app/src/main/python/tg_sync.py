@@ -119,7 +119,7 @@ async def _sync_single_chat(chat_entity, target_dir, callback):
             last_update = [dl_start]
 
             def make_progress_cb(fname, start_t, last_t):
-                def progress_cb(received, total):
+                def progress_cb(received, total, active_conns=0):
                     now = time.time()
                     if now - last_t[0] >= 1.0:
                         elapsed = now - start_t
@@ -132,7 +132,7 @@ async def _sync_single_chat(chat_entity, target_dir, callback):
                             speed_str = f"{speed / 1024:.0f} KB/s"
                         pct = (received / total * 100) if total else 0
                         callback.onProgress(
-                            f"  ↓ {fname[:30]}  {recv_mb:.1f}/{total_mb:.1f}MB  {pct:.0f}%  @ {speed_str}"
+                            f"  ↓ {fname[:20]}  {recv_mb:.1f}/{total_mb:.1f}MB  {pct:.0f}%  @ {speed_str} [Conns: {active_conns}]"
                         )
                         last_t[0] = now
                 return progress_cb
