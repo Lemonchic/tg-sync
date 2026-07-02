@@ -90,6 +90,8 @@ async def _sync_single_chat(chat_entity, target_dir, callback):
     # 1. Delete local files that no longer exist on Telegram
     deleted_count = 0
     for lf in local_files:
+        if lf.startswith('.'):
+            continue
         if lf not in remote_filenames:
             filepath = os.path.join(target_dir, lf)
             if os.path.isfile(filepath):
@@ -104,7 +106,8 @@ async def _sync_single_chat(chat_entity, target_dir, callback):
 
     # 2. Download missing or invalid files from Telegram with speed tracking
     downloaded_count = 0
-    for audio in audio_files:
+    total_tracks = len(audio_files)
+    for idx, audio in enumerate(audio_files):
         filename = audio["filename"]
         size = audio["size"]
         local_path = os.path.join(target_dir, filename)
@@ -116,7 +119,7 @@ async def _sync_single_chat(chat_entity, target_dir, callback):
             try:
                 local_size = os.path.getsize(local_path)
                 if local_size != size:
-                    callback.onProgress(f"Size mismatch for '{filename}': local {local_size} bytes, remote {size} bytes. Re-downloading...")
+                    callback.onProgress(f"[{idx+1}/{total_tracks}] Size mismatch for '{filename}': local {local_size} bytes, remote {size} bytes. Re-downloading...")
                     needs_download = True
             except Exception as e:
                 needs_download = True
@@ -125,7 +128,7 @@ async def _sync_single_chat(chat_entity, target_dir, callback):
             dl_start = time.time()
             last_update = [dl_start]
 
-            def make_progress_cb(fname, start_t, last_t):
+            def make_progress_cb(fname, start_t, last_t, track_num, total_num):
                 last_bytes = [0]
                 def progress_cb(received, total, active_conns=0):
                     now = time.time()
@@ -141,7 +144,7 @@ async def _sync_single_chat(chat_entity, target_dir, callback):
                             speed_str = f"{speed / 1024:.0f} KB/s"
                         pct = (received / total * 100) if total else 0
                         callback.onProgress(
-                            f"  ↓ {fname[:20]}  {recv_mb:.1f}/{total_mb:.1f}MB  {pct:.0f}%  @ {speed_str} [Conns: {active_conns}]"
+                            f"  ↓ [{track_num}/{total_num}] {fname[:20]}  {recv_mb:.1f}/{total_mb:.1f}MB  {pct:.0f}%  @ {speed_str} [Conns: {active_conns}]"
                         )
                         last_t[0] = now
                         last_bytes[0] = received
@@ -149,7 +152,7 @@ async def _sync_single_chat(chat_entity, target_dir, callback):
 
             from fast_telethon import download_file
 
-            callback.onProgress(f"Downloading: {filename}")
+            callback.onProgress(f"[{idx+1}/{total_tracks}] Downloading: {filename}")
             filepath = os.path.join(target_dir, filename)
             try:
                 with open(filepath, 'wb') as out_f:
@@ -157,7 +160,7 @@ async def _sync_single_chat(chat_entity, target_dir, callback):
                         client,
                         audio["msg"].media.document,
                         out_f,
-                        progress_callback=make_progress_cb(filename, dl_start, last_update)
+                        progress_callback=make_progress_cb(filename, dl_start, last_update, idx+1, total_tracks)
                     )
             except Exception as e:
                 callback.onProgress(f"  ✗ Error downloading {filename}: {e}")
@@ -174,7 +177,7 @@ async def _sync_single_chat(chat_entity, target_dir, callback):
                 avg_str = f"{avg_speed / 1_000_000:.2f} MB/s"
             else:
                 avg_str = f"{avg_speed / 1024:.0f} KB/s"
-            callback.onProgress(f"  ✓ Done in {elapsed:.1f}s (avg {avg_str})")
+            callback.onProgress(f"  ✓ Done [{idx+1}/{total_tracks}] in {elapsed:.1f}s (avg {avg_str})")
             downloaded_count += 1
 
     callback.onProgress(f"Sync Complete! Downloaded: {downloaded_count}, Deleted: {deleted_count}")
@@ -222,36 +225,108 @@ def sync_chat(chat_id, target_dir, callback):
                 music_chats = [d for d in dialogs if d.entity.id in peer_ids]
                 
                 callback.onProgress(f"Syncing {len(music_chats)} chats in 'Music' folder...")
-                
-                # Build set of expected folder names from Telegram chats
-                expected_folders = set()
+
+                # 1. Map existing local folders by their ID
+                local_folders_by_id = {}
+                if os.path.exists(target_dir):
+                    for entry in os.listdir(target_dir):
+                        entry_path = os.path.join(target_dir, entry)
+                        if os.path.isdir(entry_path):
+                            id_file = os.path.join(entry_path, ".tg_channel_id")
+                            if os.path.exists(id_file):
+                                try:
+                                    with open(id_file, 'r', encoding='utf-8') as f:
+                                        cid = f.read().strip()
+                                        if cid:
+                                            local_folders_by_id[cid] = entry
+                                except Exception:
+                                    pass
+
+                # 2. Iterate and check for rename or create
+                active_ids = set()
+                import shutil
                 for dialog in music_chats:
+                    cid = str(dialog.entity.id)
+                    active_ids.add(cid)
+                    
                     chat_title = dialog.name
                     clean_title = re.sub(r'[\\/*?:"<>|]', "", chat_title)
-                    expected_folders.add(clean_title)
-                    chat_target_dir = os.path.join(target_dir, clean_title)
+                    
+                    chat_target_dir = None
+                    if cid in local_folders_by_id:
+                        existing_folder = local_folders_by_id[cid]
+                        if existing_folder != clean_title:
+                            # User renamed channel, rename folder on device
+                            old_path = os.path.join(target_dir, existing_folder)
+                            new_path = os.path.join(target_dir, clean_title)
+                            callback.onProgress(f"Renaming folder '{existing_folder}' to '{clean_title}'...")
+                            try:
+                                if os.path.exists(new_path):
+                                    shutil.copytree(old_path, new_path, dirs_exist_ok=True)
+                                    shutil.rmtree(old_path)
+                                else:
+                                    os.rename(old_path, new_path)
+                                callback.onProgress("✓ Renamed successfully.")
+                            except Exception as e:
+                                callback.onProgress(f"✗ Failed to rename folder: {e}")
+                                clean_title = existing_folder
+                        
+                        chat_target_dir = os.path.join(target_dir, clean_title)
+                    else:
+                        # Chat ID not found in mapping. Check if folder name exists
+                        chat_target_dir = os.path.join(target_dir, clean_title)
+                        if os.path.exists(chat_target_dir):
+                            callback.onProgress(f"Associating folder '{clean_title}' with chat ID {cid}")
+                        else:
+                            callback.onProgress(f"Creating new folder '{clean_title}' for chat ID {cid}")
+                            os.makedirs(chat_target_dir, exist_ok=True)
+                        
+                        # Write the ID file
+                        try:
+                            id_file = os.path.join(chat_target_dir, ".tg_channel_id")
+                            with open(id_file, 'w', encoding='utf-8') as f:
+                                f.write(cid)
+                        except Exception as e:
+                            callback.onProgress(f"Warning: Failed to write ID file: {e}")
+
                     callback.onProgress(f"\n--- Syncing: {chat_title} ---")
                     await _sync_single_chat(dialog.entity, chat_target_dir, callback)
 
-                # Delete orphaned folders from /Music/ that are no longer in Telegram's Music folder
-                import shutil
+                # 3. Clean up orphaned folders
                 if os.path.exists(target_dir):
                     removed_folders = 0
                     for entry in os.listdir(target_dir):
                         entry_path = os.path.join(target_dir, entry)
-                        if os.path.isdir(entry_path) and entry not in expected_folders:
-                            callback.onProgress(f"Removing orphaned folder: {entry}/")
-                            try:
-                                shutil.rmtree(entry_path)
-                                removed_folders += 1
-                            except Exception as e:
-                                callback.onProgress(f"Error removing folder {entry}: {e}")
+                        if os.path.isdir(entry_path):
+                            id_file = os.path.join(entry_path, ".tg_channel_id")
+                            if os.path.exists(id_file):
+                                try:
+                                    with open(id_file, 'r', encoding='utf-8') as f:
+                                        cid = f.read().strip()
+                                    if cid and cid not in active_ids:
+                                        callback.onProgress(f"Removing orphaned folder: {entry}/")
+                                        shutil.rmtree(entry_path)
+                                        removed_folders += 1
+                                except Exception as e:
+                                    callback.onProgress(f"Error removing folder {entry}: {e}")
                     if removed_folders > 0:
                         callback.onProgress(f"Removed {removed_folders} orphaned folders.")
 
             else:
                 callback.onProgress(f"Syncing single chat: {chat_id}")
-                await _sync_single_chat(chat_id, target_dir, callback)
+                try:
+                    entity = await client.get_input_entity(chat_id)
+                    full_entity = await client.get_entity(entity)
+                    cid = str(full_entity.id)
+                    
+                    if not os.path.exists(target_dir):
+                        os.makedirs(target_dir, exist_ok=True)
+                    id_file = os.path.join(target_dir, ".tg_channel_id")
+                    with open(id_file, 'w', encoding='utf-8') as f:
+                        f.write(cid)
+                    await _sync_single_chat(entity, target_dir, callback)
+                except Exception as e:
+                    await _sync_single_chat(chat_id, target_dir, callback)
 
         except Exception as e:
             callback.onProgress(f"Error during sync: {str(e)}")
@@ -265,3 +340,13 @@ def is_authorized():
         return loop.run_until_complete(client.is_user_authorized())
     except Exception:
         return False
+
+def logout():
+    global client
+    if not client:
+        return "SUCCESS"
+    try:
+        loop.run_until_complete(client.log_out())
+        return "SUCCESS"
+    except Exception as e:
+        return f"Error: {str(e)}"

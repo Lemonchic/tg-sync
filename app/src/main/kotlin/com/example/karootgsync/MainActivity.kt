@@ -23,9 +23,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvStatus: TextView
     private lateinit var etInput: EditText
     private lateinit var btnSubmit: Button
-    private lateinit var etChatId: EditText
     private lateinit var btnSync: Button
     private lateinit var tvLog: TextView
+
+    private lateinit var layoutLogin: android.view.View
+    private lateinit var layoutSync: android.view.View
+    private lateinit var layoutConfirmLogout: android.view.View
+
+    private lateinit var btnLogout: Button
+    private lateinit var btnConfirmLogout: Button
+    private lateinit var btnCancelLogout: Button
 
     private var phoneNumber: String = ""
     enum class AuthStep {
@@ -40,14 +47,19 @@ class MainActivity : AppCompatActivity() {
         tvStatus = findViewById(R.id.tvStatus)
         etInput = findViewById(R.id.etInput)
         btnSubmit = findViewById(R.id.btnSubmit)
-        etChatId = findViewById(R.id.etChatId)
         btnSync = findViewById(R.id.btnSync)
         tvLog = findViewById(R.id.tvLog)
 
-        checkPermissions()
+        layoutLogin = findViewById(R.id.layoutLogin)
+        layoutSync = findViewById(R.id.layoutSync)
+        layoutConfirmLogout = findViewById(R.id.layoutConfirmLogout)
 
+        btnLogout = findViewById(R.id.btnLogout)
+        btnConfirmLogout = findViewById(R.id.btnConfirmLogout)
+        btnCancelLogout = findViewById(R.id.btnCancelLogout)
+
+        checkPermissions()
         initPython()
-        
         setupListeners()
     }
 
@@ -79,6 +91,38 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateUiState() {
+        runOnUiThread {
+            if (currentStep == AuthStep.READY) {
+                layoutLogin.visibility = android.view.View.GONE
+                layoutSync.visibility = android.view.View.VISIBLE
+            } else {
+                layoutLogin.visibility = android.view.View.VISIBLE
+                layoutSync.visibility = android.view.View.GONE
+                
+                val inputLayout = findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.inputLayout)
+                when (currentStep) {
+                    AuthStep.PHONE -> {
+                        tvStatus.text = "Waiting for Login"
+                        inputLayout.hint = "Enter Phone Number"
+                        etInput.hint = "Enter Phone Number"
+                    }
+                    AuthStep.CODE -> {
+                        tvStatus.text = "Waiting for Code"
+                        inputLayout.hint = "Enter Telegram Code"
+                        etInput.hint = "Enter Telegram Code"
+                    }
+                    AuthStep.PASSWORD -> {
+                        tvStatus.text = "Enter 2FA Password"
+                        inputLayout.hint = "Enter 2FA Password"
+                        etInput.hint = "Enter 2FA Password"
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
     private fun initPython() {
         try {
             if (!Python.isStarted()) {
@@ -90,7 +134,6 @@ class MainActivity : AppCompatActivity() {
                     val py = Python.getInstance()
                     val module = py.getModule("tg_sync")
                     
-                    // Initialize Telethon client
                     val sessionDir = File(filesDir, "tg_sessions").absolutePath
                     module.callAttr("init_client", sessionDir)
                     
@@ -98,14 +141,12 @@ class MainActivity : AppCompatActivity() {
                     withContext(Dispatchers.Main) {
                         if (isAuthorized) {
                             currentStep = AuthStep.READY
-                            tvStatus.text = "Logged In!"
                             appendLog("Logged into Telegram.")
                         } else {
                             currentStep = AuthStep.PHONE
-                            tvStatus.text = "Waiting for Login"
-                            etInput.hint = "Enter Phone Number (e.g. +1...)"
                             appendLog("Please log in with your phone number.")
                         }
+                        updateUiState()
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
@@ -138,13 +179,12 @@ class MainActivity : AppCompatActivity() {
                             withContext(Dispatchers.Main) {
                                 if (res == "SUCCESS") {
                                     currentStep = AuthStep.CODE
-                                    tvStatus.text = "Waiting for Code"
                                     etInput.setText("")
-                                    etInput.hint = "Enter Telegram Code"
                                     appendLog("Code sent to Telegram app.")
                                 } else {
                                     appendLog(res)
                                 }
+                                updateUiState()
                             }
                         }
                         AuthStep.CODE -> {
@@ -154,21 +194,19 @@ class MainActivity : AppCompatActivity() {
                                 when (res) {
                                     "SUCCESS" -> {
                                         currentStep = AuthStep.READY
-                                        tvStatus.text = "Logged In!"
                                         etInput.setText("")
                                         appendLog("Login successful!")
                                     }
                                     "PASSWORD_NEEDED" -> {
                                         currentStep = AuthStep.PASSWORD
-                                        tvStatus.text = "Enter 2FA Password"
                                         etInput.setText("")
-                                        etInput.hint = "Enter 2FA Password"
                                         appendLog("2-Factor Authentication enabled. Please enter your password:")
                                     }
                                     else -> {
                                         appendLog(res)
                                     }
                                 }
+                                updateUiState()
                             }
                         }
                         AuthStep.PASSWORD -> {
@@ -177,12 +215,12 @@ class MainActivity : AppCompatActivity() {
                             withContext(Dispatchers.Main) {
                                 if (res == "SUCCESS") {
                                     currentStep = AuthStep.READY
-                                    tvStatus.text = "Logged In!"
                                     etInput.setText("")
                                     appendLog("Login successful!")
                                 } else {
                                     appendLog(res)
                                 }
+                                updateUiState()
                             }
                         }
                         AuthStep.READY -> {
@@ -195,18 +233,41 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        btnSync.setOnClickListener {
-            val chatId = etChatId.text.toString().trim()
-            val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
-            
-            val targetDir: String
-            if (chatId.isEmpty()) {
-                targetDir = musicDir.absolutePath
-                appendLog("Starting sync for all chats in Telegram 'Music' folder...")
-            } else {
-                targetDir = File(musicDir, chatId.replace("@", "")).absolutePath
-                appendLog("Starting sync for $chatId...")
+        btnLogout.setOnClickListener {
+            layoutConfirmLogout.visibility = android.view.View.VISIBLE
+        }
+
+        btnCancelLogout.setOnClickListener {
+            layoutConfirmLogout.visibility = android.view.View.GONE
+        }
+
+        btnConfirmLogout.setOnClickListener {
+            layoutConfirmLogout.visibility = android.view.View.GONE
+            appendLog("Logging out...")
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val py = Python.getInstance()
+                    val module = py.getModule("tg_sync")
+                    val res = module.callAttr("logout").toString()
+                    withContext(Dispatchers.Main) {
+                        if (res == "SUCCESS") {
+                            currentStep = AuthStep.PHONE
+                            appendLog("Logged out from Telegram.")
+                            updateUiState()
+                        } else {
+                            appendLog("Logout error: $res")
+                        }
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) { appendLog("Logout Error: ${e.message}") }
+                }
             }
+        }
+
+        btnSync.setOnClickListener {
+            val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
+            val targetDir = musicDir.absolutePath
+            appendLog("Starting sync for all chats in Telegram 'Music' folder...")
 
             btnSync.isEnabled = false
 
@@ -221,7 +282,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 
-                    module.callAttr("sync_chat", chatId, targetDir, callback)
+                    module.callAttr("sync_chat", "", targetDir, callback)
 
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) { appendLog("Sync Error: ${e.message}") }
