@@ -49,7 +49,7 @@ def init_client(session_dir):
     
     # 4. Connect to Telegram on the dedicated loop thread
     future = asyncio.run_coroutine_threadsafe(client.connect(), loop)
-    future.result()
+    future.result(timeout=10.0)
 
 def request_code(phone):
     global phone_hash_cache
@@ -382,7 +382,7 @@ def reset_client(session_dir):
     if client is not None:
         try:
             future = asyncio.run_coroutine_threadsafe(client.disconnect(), loop)
-            future.result()
+            future.result(timeout=2.0)
         except Exception:
             pass
         client = None
