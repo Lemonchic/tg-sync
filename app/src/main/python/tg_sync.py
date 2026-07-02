@@ -84,16 +84,23 @@ async def _sync_single_chat(chat_entity, target_dir, callback):
 
     remote_filenames = [a["filename"] for a in audio_files]
 
+    callback.onProgress(f"Local files ({len(local_files)}): {local_files[:5]}{'...' if len(local_files) > 5 else ''}")
+    callback.onProgress(f"Remote files ({len(remote_filenames)}): {remote_filenames[:5]}{'...' if len(remote_filenames) > 5 else ''}")
+
     # 1. Delete local files that no longer exist on Telegram
     deleted_count = 0
     for lf in local_files:
         if lf not in remote_filenames:
-            callback.onProgress(f"Deleting missing file: {lf}")
-            try:
-                os.remove(os.path.join(target_dir, lf))
-                deleted_count += 1
-            except Exception as e:
-                callback.onProgress(f"Error deleting {lf}: {e}")
+            filepath = os.path.join(target_dir, lf)
+            if os.path.isfile(filepath):
+                callback.onProgress(f"Deleting orphaned file: {lf}")
+                try:
+                    os.remove(filepath)
+                    deleted_count += 1
+                except Exception as e:
+                    callback.onProgress(f"Error deleting {lf}: {e}")
+    if deleted_count > 0:
+        callback.onProgress(f"Deleted {deleted_count} orphaned files.")
 
     # 2. Download missing or invalid files from Telegram with speed tracking
     downloaded_count = 0
@@ -119,11 +126,13 @@ async def _sync_single_chat(chat_entity, target_dir, callback):
             last_update = [dl_start]
 
             def make_progress_cb(fname, start_t, last_t):
+                last_bytes = [0]
                 def progress_cb(received, total, active_conns=0):
                     now = time.time()
-                    if now - last_t[0] >= 1.0:
-                        elapsed = now - start_t
-                        speed = received / elapsed if elapsed > 0 else 0
+                    dt = now - last_t[0]
+                    if dt >= 1.0:
+                        delta_bytes = received - last_bytes[0]
+                        speed = delta_bytes / dt if dt > 0 else 0
                         total_mb = total / (1024 * 1024) if total else 0
                         recv_mb = received / (1024 * 1024)
                         if speed >= 1_000_000:
@@ -135,6 +144,7 @@ async def _sync_single_chat(chat_entity, target_dir, callback):
                             f"  ↓ {fname[:20]}  {recv_mb:.1f}/{total_mb:.1f}MB  {pct:.0f}%  @ {speed_str} [Conns: {active_conns}]"
                         )
                         last_t[0] = now
+                        last_bytes[0] = received
                 return progress_cb
 
             from fast_telethon import download_file
@@ -212,12 +222,33 @@ def sync_chat(chat_id, target_dir, callback):
                 music_chats = [d for d in dialogs if d.entity.id in peer_ids]
                 
                 callback.onProgress(f"Syncing {len(music_chats)} chats in 'Music' folder...")
+                
+                # Build set of expected folder names from Telegram chats
+                expected_folders = set()
                 for dialog in music_chats:
                     chat_title = dialog.name
                     clean_title = re.sub(r'[\\/*?:"<>|]', "", chat_title)
+                    expected_folders.add(clean_title)
                     chat_target_dir = os.path.join(target_dir, clean_title)
                     callback.onProgress(f"\n--- Syncing: {chat_title} ---")
                     await _sync_single_chat(dialog.entity, chat_target_dir, callback)
+
+                # Delete orphaned folders from /Music/ that are no longer in Telegram's Music folder
+                import shutil
+                if os.path.exists(target_dir):
+                    removed_folders = 0
+                    for entry in os.listdir(target_dir):
+                        entry_path = os.path.join(target_dir, entry)
+                        if os.path.isdir(entry_path) and entry not in expected_folders:
+                            callback.onProgress(f"Removing orphaned folder: {entry}/")
+                            try:
+                                shutil.rmtree(entry_path)
+                                removed_folders += 1
+                            except Exception as e:
+                                callback.onProgress(f"Error removing folder {entry}: {e}")
+                    if removed_folders > 0:
+                        callback.onProgress(f"Removed {removed_folders} orphaned folders.")
+
             else:
                 callback.onProgress(f"Syncing single chat: {chat_id}")
                 await _sync_single_chat(chat_id, target_dir, callback)
