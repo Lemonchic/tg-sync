@@ -122,12 +122,27 @@ async def _sync_single_chat(chat_entity, target_dir, callback):
                         last_t[0] = now
                 return progress_cb
 
+            from fast_telethon import download_file
+
             callback.onProgress(f"Downloading: {filename}")
-            await client.download_media(
-                audio["msg"],
-                file=os.path.join(target_dir, filename),
-                progress_callback=make_progress_cb(filename, dl_start, last_update)
-            )
+            filepath = os.path.join(target_dir, filename)
+            try:
+                with open(filepath, 'wb') as out_f:
+                    await download_file(
+                        client,
+                        audio["msg"].media.document,
+                        out_f,
+                        progress_callback=make_progress_cb(filename, dl_start, last_update)
+                    )
+            except Exception as e:
+                callback.onProgress(f"  ✗ Error downloading {filename}: {e}")
+                if os.path.exists(filepath):
+                    try:
+                        os.remove(filepath)
+                    except:
+                        pass
+                continue
+
             elapsed = time.time() - dl_start
             avg_speed = os.path.getsize(os.path.join(target_dir, filename)) / elapsed if elapsed > 0 else 0
             if avg_speed >= 1_000_000:
