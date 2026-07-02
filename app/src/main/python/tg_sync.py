@@ -113,7 +113,7 @@ def sync_chat(chat_id, target_dir, callback):
                 filters = await client(GetDialogFiltersRequest())
                 
                 music_filter = None
-                for f in filters:
+                for f in filters.filters:
                     if hasattr(f, 'title') and f.title and f.title.lower() == "music":
                         music_filter = f
                         break
