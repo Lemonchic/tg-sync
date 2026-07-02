@@ -1,4 +1,4 @@
-package com.example.karootgsync
+package com.example.tgsync
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import com.example.tgsync.R
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnSync: Button
     private lateinit var tvLog: TextView
 
+    private lateinit var layoutLoading: android.view.View
     private lateinit var layoutLogin: android.view.View
     private lateinit var layoutSync: android.view.View
     private lateinit var layoutConfirmLogout: android.view.View
@@ -50,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         btnSync = findViewById(R.id.btnSync)
         tvLog = findViewById(R.id.tvLog)
 
+        layoutLoading = findViewById(R.id.layoutLoading)
         layoutLogin = findViewById(R.id.layoutLogin)
         layoutSync = findViewById(R.id.layoutSync)
         layoutConfirmLogout = findViewById(R.id.layoutConfirmLogout)
@@ -93,6 +96,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateUiState() {
         runOnUiThread {
+            layoutLoading.visibility = android.view.View.GONE
             if (currentStep == AuthStep.READY) {
                 layoutLogin.visibility = android.view.View.GONE
                 layoutSync.visibility = android.view.View.VISIBLE
@@ -152,12 +156,14 @@ class MainActivity : AppCompatActivity() {
                     withContext(Dispatchers.Main) {
                         tvStatus.text = "Initialization Error"
                         appendLog("Error: ${e.message}")
+                        updateUiState()
                     }
                 }
             }
         } catch (e: Exception) {
             tvStatus.text = "Initialization Error"
             appendLog("Error: ${e.message}")
+            updateUiState()
         }
     }
 

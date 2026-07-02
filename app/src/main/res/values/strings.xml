@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App identity -->
-    <string name="app_name">Karoo Music</string>
+    <string name="app_name">TG Sync</string>
     <string name="extension_name">Karoo Music Player</string>
     <string name="data_field_name">Music Player</string>
 

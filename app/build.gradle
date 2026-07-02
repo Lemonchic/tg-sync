@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.karootgsync'
+    namespace 'com.example.tgsync'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.karootgsync"
+        applicationId "com.example.tgsync"
         minSdk 26
         targetSdk 34
         versionCode 1
