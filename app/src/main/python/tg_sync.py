@@ -1,5 +1,8 @@
 import asyncio
 import os
+import fast_ige
+fast_ige.patch_telethon()
+
 from telethon import TelegramClient
 from telethon.tl.types import MessageMediaDocument, DocumentAttributeAudio
 from telethon.errors import SessionPasswordNeededError

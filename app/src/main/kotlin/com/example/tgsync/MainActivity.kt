@@ -31,12 +31,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var layoutLogin: android.view.View
     private lateinit var layoutSync: android.view.View
     private lateinit var layoutConfirmLogout: android.view.View
+    private lateinit var layoutConfirmExit: android.view.View
 
     private lateinit var btnLogout: Button
     private lateinit var btnConfirmLogout: Button
     private lateinit var btnCancelLogout: Button
     private lateinit var btnBackToPhone: Button
     private lateinit var btnExit: Button
+    private lateinit var btnCancelExit: Button
+    private lateinit var btnConfirmExit: Button
 
     private var phoneNumber: String = ""
     private var deliveryMethod: String = "Telegram App"
@@ -59,12 +62,15 @@ class MainActivity : AppCompatActivity() {
         layoutLogin = findViewById(R.id.layoutLogin)
         layoutSync = findViewById(R.id.layoutSync)
         layoutConfirmLogout = findViewById(R.id.layoutConfirmLogout)
+        layoutConfirmExit = findViewById(R.id.layoutConfirmExit)
 
         btnLogout = findViewById(R.id.btnLogout)
         btnConfirmLogout = findViewById(R.id.btnConfirmLogout)
         btnCancelLogout = findViewById(R.id.btnCancelLogout)
         btnBackToPhone = findViewById(R.id.btnBackToPhone)
         btnExit = findViewById(R.id.btnExit)
+        btnCancelExit = findViewById(R.id.btnCancelExit)
+        btnConfirmExit = findViewById(R.id.btnConfirmExit)
 
         checkPermissions()
         initPython()
@@ -302,6 +308,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnExit.setOnClickListener {
+            layoutConfirmExit.visibility = android.view.View.VISIBLE
+        }
+
+        btnCancelExit.setOnClickListener {
+            layoutConfirmExit.visibility = android.view.View.GONE
+        }
+
+        btnConfirmExit.setOnClickListener {
+            layoutConfirmExit.visibility = android.view.View.GONE
             finishAndRemoveTask()
         }
 

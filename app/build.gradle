@@ -40,6 +40,7 @@ chaquopy {
         pip {
             install "telethon"
             install "cryptography"
+            install "pycryptodome"
         }
     }
 }

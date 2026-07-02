@@ -139,28 +139,6 @@
             android:layout_marginBottom="16dp">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnExit"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:text="Exit App"
-                android:textColor="@color/white"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                app:backgroundTint="@color/blue"
-                app:cornerRadius="6dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/blue_dark"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:insetTop="0dp"
-                android:insetBottom="0dp" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1" />
-
-            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogout"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
@@ -175,6 +153,28 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 app:iconGravity="textStart"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnExit"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Exit App"
+                android:textColor="@color/white"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/blue"
+                app:cornerRadius="6dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/blue_dark"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:insetTop="0dp"
                 android:insetBottom="0dp" />
         </LinearLayout>
@@ -289,6 +289,78 @@
                         android:text="Yes, Logout"
                         android:textColor="@color/white"
                         app:backgroundTint="@color/error"
+                        app:cornerRadius="8dp" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
+
+    <!-- 5. EXIT CONFIRMATION MODAL OVERLAY -->
+    <FrameLayout
+        android:id="@+id/layoutConfirmExit"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#DD121212"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="32dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="@color/surface"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/divider">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Confirm Exit"
+                    android:textColor="@color/blue"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Are you sure you want to exit the app? Any active sync in progress will be stopped."
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="24dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="end">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCancelExit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:text="Cancel"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginEnd="12dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnConfirmExit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Yes, Exit"
+                        android:textColor="@color/white"
+                        app:backgroundTint="@color/blue"
                         app:cornerRadius="8dp" />
                 </LinearLayout>
             </LinearLayout>
