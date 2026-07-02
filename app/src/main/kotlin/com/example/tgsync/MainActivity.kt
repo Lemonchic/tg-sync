@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnConfirmLogout: Button
     private lateinit var btnCancelLogout: Button
     private lateinit var btnBackToPhone: Button
+    private lateinit var btnExit: Button
 
     private var phoneNumber: String = ""
     private var deliveryMethod: String = "Telegram App"
@@ -63,6 +64,7 @@ class MainActivity : AppCompatActivity() {
         btnConfirmLogout = findViewById(R.id.btnConfirmLogout)
         btnCancelLogout = findViewById(R.id.btnCancelLogout)
         btnBackToPhone = findViewById(R.id.btnBackToPhone)
+        btnExit = findViewById(R.id.btnExit)
 
         checkPermissions()
         initPython()
@@ -297,6 +299,10 @@ class MainActivity : AppCompatActivity() {
 
         btnCancelLogout.setOnClickListener {
             layoutConfirmLogout.visibility = android.view.View.GONE
+        }
+
+        btnExit.setOnClickListener {
+            finishAndRemoveTask()
         }
 
         btnConfirmLogout.setOnClickListener {
