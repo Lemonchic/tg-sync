@@ -8,12 +8,22 @@ from telethon.errors import SessionPasswordNeededError
 api_id = 94575
 api_hash = 'a3406de8d171bb422bb6ddf3bbd800e2'
 
+import threading
+
 client = None
 loop = None
 phone_hash_cache = None
+loop_thread = None
+
+def _run_loop(lp):
+    asyncio.set_event_loop(lp)
+    lp.run_forever()
 
 def init_client(session_dir):
-    global client, loop
+    global client, loop, loop_thread
+    if client is not None:
+        print("[KarooTgSync] Client already initialized, skipping duplicate setup")
+        return
 
     # Monkey-patch Telethon's slow pure-Python AES-IGE with our fast
     # cryptography-backed implementation BEFORE creating the client
@@ -26,17 +36,28 @@ def init_client(session_dir):
 
     if not os.path.exists(session_dir):
         os.makedirs(session_dir)
+
+    # 1. Create a dedicated event loop
     loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
+
+    # 2. Run it on a dedicated background daemon thread
+    loop_thread = threading.Thread(target=_run_loop, args=(loop,), daemon=True)
+    loop_thread.start()
+
+    # 3. Create the Telegram client bound to the loop
     client = TelegramClient(f"{session_dir}/karoo_sync.session", api_id, api_hash, loop=loop)
-    loop.run_until_complete(client.connect())
+    
+    # 4. Connect to Telegram on the dedicated loop thread
+    future = asyncio.run_coroutine_threadsafe(client.connect(), loop)
+    future.result()
 
 def request_code(phone):
     global phone_hash_cache
     if not client:
         return "Error: Client not initialized"
     try:
-        req = loop.run_until_complete(client.send_code_request(phone))
+        future = asyncio.run_coroutine_threadsafe(client.send_code_request(phone), loop)
+        req = future.result()
         phone_hash_cache = req.phone_code_hash
         return "SUCCESS"
     except Exception as e:
@@ -47,9 +68,11 @@ def submit_code(phone, code, password=""):
         return "Error: Client not initialized"
     try:
         if password:
-            loop.run_until_complete(client.sign_in(password=password))
+            coro = client.sign_in(password=password)
         else:
-            loop.run_until_complete(client.sign_in(phone, code, phone_code_hash=phone_hash_cache))
+            coro = client.sign_in(phone, code, phone_code_hash=phone_hash_cache)
+        future = asyncio.run_coroutine_threadsafe(coro, loop)
+        future.result()
         return "SUCCESS"
     except SessionPasswordNeededError:
         return "PASSWORD_NEEDED"
@@ -331,13 +354,15 @@ def sync_chat(chat_id, target_dir, callback):
         except Exception as e:
             callback.onProgress(f"Error during sync: {str(e)}")
 
-    loop.run_until_complete(_sync())
+    future = asyncio.run_coroutine_threadsafe(_sync(), loop)
+    future.result()
 
 def is_authorized():
     if not client:
         return False
     try:
-        return loop.run_until_complete(client.is_user_authorized())
+        future = asyncio.run_coroutine_threadsafe(client.is_user_authorized(), loop)
+        return future.result()
     except Exception:
         return False
 
@@ -346,7 +371,31 @@ def logout():
     if not client:
         return "SUCCESS"
     try:
-        loop.run_until_complete(client.log_out())
+        future = asyncio.run_coroutine_threadsafe(client.log_out(), loop)
+        future.result()
         return "SUCCESS"
     except Exception as e:
         return f"Error: {str(e)}"
+
+def reset_client(session_dir):
+    global client, loop
+    if client is not None:
+        try:
+            future = asyncio.run_coroutine_threadsafe(client.disconnect(), loop)
+            future.result()
+        except Exception:
+            pass
+        client = None
+    
+    # Force delete session database files to ensure absolute clean state
+    session_file = f"{session_dir}/karoo_sync.session"
+    for ext in ['', '-journal']:
+        path = session_file + ext
+        if os.path.exists(path):
+            try:
+                os.remove(path)
+            except Exception:
+                pass
+
+    init_client(session_dir)
+    return "SUCCESS"

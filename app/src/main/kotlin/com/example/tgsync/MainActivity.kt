@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnLogout: Button
     private lateinit var btnConfirmLogout: Button
     private lateinit var btnCancelLogout: Button
+    private lateinit var btnBackToPhone: Button
 
     private var phoneNumber: String = ""
     enum class AuthStep {
@@ -60,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         btnLogout = findViewById(R.id.btnLogout)
         btnConfirmLogout = findViewById(R.id.btnConfirmLogout)
         btnCancelLogout = findViewById(R.id.btnCancelLogout)
+        btnBackToPhone = findViewById(R.id.btnBackToPhone)
 
         checkPermissions()
         initPython()
@@ -110,16 +112,19 @@ class MainActivity : AppCompatActivity() {
                         tvStatus.text = "Waiting for Login"
                         inputLayout.hint = "Enter Phone Number"
                         etInput.hint = "Enter Phone Number"
+                        btnBackToPhone.visibility = android.view.View.GONE
                     }
                     AuthStep.CODE -> {
                         tvStatus.text = "Waiting for Code"
                         inputLayout.hint = "Enter Telegram Code"
                         etInput.hint = "Enter Telegram Code"
+                        btnBackToPhone.visibility = android.view.View.VISIBLE
                     }
                     AuthStep.PASSWORD -> {
                         tvStatus.text = "Enter 2FA Password"
                         inputLayout.hint = "Enter 2FA Password"
                         etInput.hint = "Enter 2FA Password"
+                        btnBackToPhone.visibility = android.view.View.VISIBLE
                     }
                     else -> {}
                 }
@@ -154,14 +159,14 @@ class MainActivity : AppCompatActivity() {
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
-                        tvStatus.text = "Initialization Error"
+                        tvStatus.text = "Initialization Error: ${e.message}"
                         appendLog("Error: ${e.message}")
                         updateUiState()
                     }
                 }
             }
         } catch (e: Exception) {
-            tvStatus.text = "Initialization Error"
+            tvStatus.text = "Initialization Error: ${e.message}"
             appendLog("Error: ${e.message}")
             updateUiState()
         }
@@ -180,21 +185,29 @@ class MainActivity : AppCompatActivity() {
                     when (currentStep) {
                         AuthStep.PHONE -> {
                             phoneNumber = input
-                            withContext(Dispatchers.Main) { appendLog("Requesting code for $phoneNumber...") }
+                            withContext(Dispatchers.Main) { 
+                                tvStatus.text = "Requesting code..."
+                                appendLog("Requesting code for $phoneNumber...") 
+                            }
                             val res = module.callAttr("request_code", phoneNumber).toString()
                             withContext(Dispatchers.Main) {
                                 if (res == "SUCCESS") {
                                     currentStep = AuthStep.CODE
                                     etInput.setText("")
+                                    tvStatus.text = "Code sent to Telegram!"
                                     appendLog("Code sent to Telegram app.")
                                 } else {
+                                    tvStatus.text = res
                                     appendLog(res)
                                 }
                                 updateUiState()
                             }
                         }
                         AuthStep.CODE -> {
-                            withContext(Dispatchers.Main) { appendLog("Submitting code...") }
+                            withContext(Dispatchers.Main) { 
+                                tvStatus.text = "Submitting code..."
+                                appendLog("Submitting code...") 
+                            }
                             val res = module.callAttr("submit_code", phoneNumber, input, "").toString()
                             withContext(Dispatchers.Main) {
                                 when (res) {
@@ -206,9 +219,11 @@ class MainActivity : AppCompatActivity() {
                                     "PASSWORD_NEEDED" -> {
                                         currentStep = AuthStep.PASSWORD
                                         etInput.setText("")
+                                        tvStatus.text = "2FA Password Required"
                                         appendLog("2-Factor Authentication enabled. Please enter your password:")
                                     }
                                     else -> {
+                                        tvStatus.text = res
                                         appendLog(res)
                                     }
                                 }
@@ -216,7 +231,10 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                         AuthStep.PASSWORD -> {
-                            withContext(Dispatchers.Main) { appendLog("Submitting password...") }
+                            withContext(Dispatchers.Main) { 
+                                tvStatus.text = "Submitting password..."
+                                appendLog("Submitting password...") 
+                            }
                             val res = module.callAttr("submit_code", phoneNumber, "", input).toString()
                             withContext(Dispatchers.Main) {
                                 if (res == "SUCCESS") {
@@ -224,6 +242,7 @@ class MainActivity : AppCompatActivity() {
                                     etInput.setText("")
                                     appendLog("Login successful!")
                                 } else {
+                                    tvStatus.text = res
                                     appendLog(res)
                                 }
                                 updateUiState()
@@ -234,7 +253,39 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 } catch (e: Exception) {
-                    withContext(Dispatchers.Main) { appendLog("Error: ${e.message}") }
+                    withContext(Dispatchers.Main) { 
+                        tvStatus.text = "Error: ${e.message}"
+                        appendLog("Error: ${e.message}") 
+                    }
+                }
+            }
+        }
+
+        btnBackToPhone.setOnClickListener {
+            tvStatus.text = "Resetting connection..."
+            btnBackToPhone.isEnabled = false
+            btnSubmit.isEnabled = false
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val py = Python.getInstance()
+                    val module = py.getModule("tg_sync")
+                    val sessionDir = File(filesDir, "tg_sessions").absolutePath
+                    module.callAttr("reset_client", sessionDir)
+                    withContext(Dispatchers.Main) {
+                        currentStep = AuthStep.PHONE
+                        etInput.setText("")
+                        tvStatus.text = "Waiting for Login"
+                        btnBackToPhone.isEnabled = true
+                        btnSubmit.isEnabled = true
+                        updateUiState()
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        tvStatus.text = "Reset Error: ${e.message}"
+                        btnBackToPhone.isEnabled = true
+                        btnSubmit.isEnabled = true
+                        updateUiState()
+                    }
                 }
             }
         }

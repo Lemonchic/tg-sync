@@ -107,6 +107,16 @@
                     app:cornerRadius="10dp"
                     app:backgroundTint="@color/control_active" />
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnBackToPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:text="Back to Phone Number"
+                    android:textColor="@color/text_secondary"
+                    android:visibility="gone"
+                    android:layout_marginTop="8dp" />
+
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
