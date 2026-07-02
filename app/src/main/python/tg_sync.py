@@ -73,7 +73,7 @@ async def _sync_single_chat(chat_entity, target_dir, callback):
                     filename = next((a.file_name for a in message.media.document.attributes if hasattr(a, 'file_name')), None)
                     if not filename:
                         filename = f"audio_{message.id}.mp3"
-                    audio_files.append({"id": message.id, "filename": filename, "msg": message})
+                    audio_files.append({"id": message.id, "filename": filename, "size": message.media.document.size, "msg": message})
                     break
 
     callback.onProgress(f"Found {len(audio_files)} audio files on Telegram.")
@@ -95,11 +95,26 @@ async def _sync_single_chat(chat_entity, target_dir, callback):
             except Exception as e:
                 callback.onProgress(f"Error deleting {lf}: {e}")
 
-    # 2. Download missing files from Telegram with speed tracking
+    # 2. Download missing or invalid files from Telegram with speed tracking
     downloaded_count = 0
     for audio in audio_files:
         filename = audio["filename"]
+        size = audio["size"]
+        local_path = os.path.join(target_dir, filename)
+
+        needs_download = False
         if filename not in local_files:
+            needs_download = True
+        else:
+            try:
+                local_size = os.path.getsize(local_path)
+                if local_size != size:
+                    callback.onProgress(f"Size mismatch for '{filename}': local {local_size} bytes, remote {size} bytes. Re-downloading...")
+                    needs_download = True
+            except Exception as e:
+                needs_download = True
+
+        if needs_download:
             dl_start = time.time()
             last_update = [dl_start]
 
