@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnBackToPhone: Button
 
     private var phoneNumber: String = ""
+    private var deliveryMethod: String = "Telegram App"
     enum class AuthStep {
         PHONE, CODE, PASSWORD, READY
     }
@@ -115,13 +116,13 @@ class MainActivity : AppCompatActivity() {
                         btnBackToPhone.visibility = android.view.View.GONE
                     }
                     AuthStep.CODE -> {
-                        tvStatus.text = "Waiting for Code"
+                        tvStatus.text = "Code sent via $deliveryMethod\nto: $phoneNumber"
                         inputLayout.hint = "Enter Telegram Code"
                         etInput.hint = "Enter Telegram Code"
                         btnBackToPhone.visibility = android.view.View.VISIBLE
                     }
                     AuthStep.PASSWORD -> {
-                        tvStatus.text = "Enter 2FA Password"
+                        tvStatus.text = "2FA Password Required\nfor: $phoneNumber"
                         inputLayout.hint = "Enter 2FA Password"
                         etInput.hint = "Enter 2FA Password"
                         btnBackToPhone.visibility = android.view.View.VISIBLE
@@ -194,9 +195,8 @@ class MainActivity : AppCompatActivity() {
                                 if (res.startsWith("SUCCESS")) {
                                     currentStep = AuthStep.CODE
                                     etInput.setText("")
-                                    val delivery = res.substringAfter("SUCCESS:", "Telegram App")
-                                    tvStatus.text = "Code sent via $delivery!"
-                                    appendLog("Code sent to $delivery.")
+                                    deliveryMethod = res.substringAfter("SUCCESS:", "Telegram App")
+                                    appendLog("Code sent to $deliveryMethod.")
                                 } else {
                                     tvStatus.text = res
                                     appendLog(res)

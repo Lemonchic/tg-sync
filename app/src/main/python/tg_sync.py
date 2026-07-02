@@ -13,14 +13,9 @@ import threading
 client = None
 loop = None
 phone_hash_cache = None
-loop_thread = None
-
-def _run_loop(lp):
-    asyncio.set_event_loop(lp)
-    lp.run_forever()
 
 def init_client(session_dir):
-    global client, loop, loop_thread
+    global client, loop
     if client is not None:
         print("[KarooTgSync] Client already initialized, skipping duplicate setup")
         return
@@ -33,25 +28,20 @@ def init_client(session_dir):
 
     # 1. Create a dedicated event loop
     loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
 
-    # 2. Run it on a dedicated background daemon thread
-    loop_thread = threading.Thread(target=_run_loop, args=(loop,), daemon=True)
-    loop_thread.start()
-
-    # 3. Create the Telegram client bound to the loop
+    # 2. Create the Telegram client bound to the loop
     client = TelegramClient(f"{session_dir}/karoo_sync.session", api_id, api_hash, loop=loop)
     
-    # 4. Connect to Telegram on the dedicated loop thread
-    future = asyncio.run_coroutine_threadsafe(client.connect(), loop)
-    future.result(timeout=10.0)
+    # 3. Connect to Telegram
+    loop.run_until_complete(client.connect())
 
 def request_code(phone):
     global phone_hash_cache
     if not client:
         return "Error: Client not initialized"
     try:
-        future = asyncio.run_coroutine_threadsafe(client.send_code_request(phone), loop)
-        req = future.result()
+        req = loop.run_until_complete(client.send_code_request(phone))
         phone_hash_cache = req.phone_code_hash
         # Extract the type name of SentCodeType (e.g., SentCodeTypeApp, SentCodeTypeSms)
         delivery_type = "App"
@@ -75,11 +65,9 @@ def submit_code(phone, code, password=""):
         return "Error: Client not initialized"
     try:
         if password:
-            coro = client.sign_in(password=password)
+            loop.run_until_complete(client.sign_in(password=password))
         else:
-            coro = client.sign_in(phone, code, phone_code_hash=phone_hash_cache)
-        future = asyncio.run_coroutine_threadsafe(coro, loop)
-        future.result()
+            loop.run_until_complete(client.sign_in(phone, code, phone_code_hash=phone_hash_cache))
         return "SUCCESS"
     except SessionPasswordNeededError:
         return "PASSWORD_NEEDED"
@@ -361,15 +349,13 @@ def sync_chat(chat_id, target_dir, callback):
         except Exception as e:
             callback.onProgress(f"Error during sync: {str(e)}")
 
-    future = asyncio.run_coroutine_threadsafe(_sync(), loop)
-    future.result()
+    loop.run_until_complete(_sync())
 
 def is_authorized():
     if not client:
         return False
     try:
-        future = asyncio.run_coroutine_threadsafe(client.is_user_authorized(), loop)
-        return future.result()
+        return loop.run_until_complete(client.is_user_authorized())
     except Exception:
         return False
 
@@ -378,8 +364,7 @@ def logout():
     if not client:
         return "SUCCESS"
     try:
-        future = asyncio.run_coroutine_threadsafe(client.log_out(), loop)
-        future.result()
+        loop.run_until_complete(client.log_out())
         return "SUCCESS"
     except Exception as e:
         return f"Error: {str(e)}"
@@ -388,8 +373,7 @@ def reset_client(session_dir):
     global client, loop
     if client is not None:
         try:
-            future = asyncio.run_coroutine_threadsafe(client.disconnect(), loop)
-            future.result(timeout=2.0)
+            loop.run_until_complete(client.disconnect())
         except Exception:
             pass
         client = None
