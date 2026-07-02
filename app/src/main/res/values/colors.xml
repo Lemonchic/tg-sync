@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base dark theme colors -->
+    <color name="background">#FF121212</color>
+    <color name="surface">#FF1E1E1E</color>
+    <color name="field_background">#FF1A1A1A</color>
+
+    <!-- Primary / accent -->
+    <color name="primary">#FF4CAF50</color>
+    <color name="primary_dark">#FF388E3C</color>
+    <color name="primary_light">#FF81C784</color>
+
+    <!-- Error / destructive -->
+    <color name="error">#FFF44336</color>
+    <color name="error_dark">#FFD32F2F</color>
+
+    <!-- Text hierarchy -->
+    <color name="text_primary">#FFFFFFFF</color>
+    <color name="text_secondary">#FFB0B0B0</color>
+    <color name="text_tertiary">#FF808080</color>
+
+    <!-- Control tints -->
+    <color name="control_active">#FF4CAF50</color>
+    <color name="control_inactive">#FF808080</color>
+
+    <!-- Divider -->
+    <color name="divider">#FF333333</color>
+
+    <!-- Misc -->
+    <color name="button_sync_enabled">#FF4CAF50</color>
+    <color name="button_cancel">#FFF44336</color>
+    <color name="card_background">#FF1E1E1E</color>
+    <color name="input_stroke">#FF555555</color>
+    <color name="launcher_background">#FF2E7D32</color>
+    <color name="storage_bar_track">#FF333333</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+</resources>

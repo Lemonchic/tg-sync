@@ -1,0 +1,211 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.karoo.music"
+4    android:versionCode="1"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="26"
+9        android:targetSdkVersion="34" />
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:4:5-67
+11-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:4:22-64
+12    <uses-permission android:name="android.permission.WAKE_LOCK" />
+12-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:5:5-68
+12-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:5:22-65
+13    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+13-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:6:5-77
+13-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:6:22-74
+14    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+14-->[androidx.media3:media3-common:1.2.1] C:\Users\Abobich\.gradle\caches\transforms-4\b8d365078d01023096d1bf47d4178631\transformed\media3-common-1.2.1\AndroidManifest.xml:22:5-79
+14-->[androidx.media3:media3-common:1.2.1] C:\Users\Abobich\.gradle\caches\transforms-4\b8d365078d01023096d1bf47d4178631\transformed\media3-common-1.2.1\AndroidManifest.xml:22:22-76
+15
+16    <permission
+16-->[androidx.core:core:1.12.0] C:\Users\Abobich\.gradle\caches\transforms-4\af9c63df93fa6afa37bd680a89107361\transformed\core-1.12.0\AndroidManifest.xml:22:5-24:47
+17        android:name="com.example.karoo.music.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+17-->[androidx.core:core:1.12.0] C:\Users\Abobich\.gradle\caches\transforms-4\af9c63df93fa6afa37bd680a89107361\transformed\core-1.12.0\AndroidManifest.xml:23:9-81
+18        android:protectionLevel="signature" />
+18-->[androidx.core:core:1.12.0] C:\Users\Abobich\.gradle\caches\transforms-4\af9c63df93fa6afa37bd680a89107361\transformed\core-1.12.0\AndroidManifest.xml:24:9-44
+19
+20    <uses-permission android:name="com.example.karoo.music.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+20-->[androidx.core:core:1.12.0] C:\Users\Abobich\.gradle\caches\transforms-4\af9c63df93fa6afa37bd680a89107361\transformed\core-1.12.0\AndroidManifest.xml:26:5-97
+20-->[androidx.core:core:1.12.0] C:\Users\Abobich\.gradle\caches\transforms-4\af9c63df93fa6afa37bd680a89107361\transformed\core-1.12.0\AndroidManifest.xml:26:22-94
+21
+22    <application
+22-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:8:5-58:19
+23        android:allowBackup="false"
+23-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:9:9-36
+24        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+24-->[androidx.core:core:1.12.0] C:\Users\Abobich\.gradle\caches\transforms-4\af9c63df93fa6afa37bd680a89107361\transformed\core-1.12.0\AndroidManifest.xml:28:18-86
+25        android:debuggable="true"
+26        android:extractNativeLibs="false"
+27        android:icon="@mipmap/ic_launcher"
+27-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:10:9-43
+28        android:label="@string/app_name"
+28-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:11:9-41
+29        android:supportsRtl="true"
+29-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:12:9-35
+30        android:theme="@style/AppTheme" >
+30-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:13:9-40
+31
+32        <!-- Main settings/sync activity -->
+33        <activity
+33-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:16:9-25:20
+34            android:name="com.example.karoo.music.ui.MainActivity"
+34-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:17:13-44
+35            android:exported="true"
+35-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:18:13-36
+36            android:label="@string/app_name"
+36-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:20:13-45
+37            android:launchMode="singleTop" >
+37-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:19:13-43
+38            <intent-filter>
+38-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:21:13-24:29
+39                <action android:name="android.intent.action.MAIN" />
+39-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:22:17-69
+39-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:22:25-66
+40
+41                <category android:name="android.intent.category.LAUNCHER" />
+41-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:23:17-77
+41-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:23:27-74
+42            </intent-filter>
+43        </activity>
+44
+45        <!-- Karoo Extension Service -->
+46        <service
+46-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:28:9-37:19
+47            android:name="com.example.karoo.music.extension.KarooMusicExtension"
+47-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:29:13-58
+48            android:exported="true" >
+48-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:30:13-36
+49            <intent-filter>
+49-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:31:13-33:29
+50                <action android:name="io.hammerhead.karooext.KAROO_EXTENSION" />
+50-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:32:17-81
+50-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:32:25-78
+51            </intent-filter>
+52
+53            <meta-data
+53-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:34:13-36:58
+54                android:name="io.hammerhead.karooext.EXTENSION_INFO"
+54-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:35:17-69
+55                android:resource="@xml/extension_info" />
+55-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:36:17-55
+56        </service>
+57
+58        <!-- Playback foreground service (wakelock + audio focus) -->
+59        <service
+59-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:40:9-42:40
+60            android:name="com.example.karoo.music.playback.PlaybackService"
+60-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:41:13-53
+61            android:exported="false" />
+61-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:42:13-37
+62
+63        <!-- BroadcastReceiver for ride screen control actions -->
+64        <receiver
+64-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:45:9-56:20
+65            android:name="com.example.karoo.music.extension.PlaybackActionReceiver"
+65-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:46:13-61
+66            android:exported="false" >
+66-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:47:13-37
+67            <intent-filter>
+67-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:48:13-55:29
+68                <action android:name="com.example.karoo.music.ACTION_PLAY_PAUSE" />
+68-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:49:17-84
+68-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:49:25-81
+69                <action android:name="com.example.karoo.music.ACTION_NEXT" />
+69-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:50:17-78
+69-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:50:25-75
+70                <action android:name="com.example.karoo.music.ACTION_PREVIOUS" />
+70-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:51:17-82
+70-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:51:25-79
+71                <action android:name="com.example.karoo.music.ACTION_TOGGLE_SHUFFLE" />
+71-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:52:17-88
+71-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:52:25-85
+72                <action android:name="com.example.karoo.music.ACTION_TOGGLE_REPEAT" />
+72-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:53:17-87
+72-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:53:25-84
+73                <action android:name="com.example.karoo.music.ACTION_CYCLE_PLAYLIST" />
+73-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:54:17-88
+73-->C:\Users\Abobich\.gemini\antigravity\scratch\karoo-music-player\app\src\main\AndroidManifest.xml:54:25-85
+74            </intent-filter>
+75        </receiver>
+76
+77        <provider
+77-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Abobich\.gradle\caches\transforms-4\88a7da2e3949b2c0db95419cad741eee\transformed\emoji2-1.2.0\AndroidManifest.xml:24:9-32:20
+78            android:name="androidx.startup.InitializationProvider"
+78-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Abobich\.gradle\caches\transforms-4\88a7da2e3949b2c0db95419cad741eee\transformed\emoji2-1.2.0\AndroidManifest.xml:25:13-67
+79            android:authorities="com.example.karoo.music.androidx-startup"
+79-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Abobich\.gradle\caches\transforms-4\88a7da2e3949b2c0db95419cad741eee\transformed\emoji2-1.2.0\AndroidManifest.xml:26:13-68
+80            android:exported="false" >
+80-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Abobich\.gradle\caches\transforms-4\88a7da2e3949b2c0db95419cad741eee\transformed\emoji2-1.2.0\AndroidManifest.xml:27:13-37
+81            <meta-data
+81-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Abobich\.gradle\caches\transforms-4\88a7da2e3949b2c0db95419cad741eee\transformed\emoji2-1.2.0\AndroidManifest.xml:29:13-31:52
+82                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+82-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Abobich\.gradle\caches\transforms-4\88a7da2e3949b2c0db95419cad741eee\transformed\emoji2-1.2.0\AndroidManifest.xml:30:17-75
+83                android:value="androidx.startup" />
+83-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Abobich\.gradle\caches\transforms-4\88a7da2e3949b2c0db95419cad741eee\transformed\emoji2-1.2.0\AndroidManifest.xml:31:17-49
+84            <meta-data
+84-->[androidx.lifecycle:lifecycle-process:2.6.1] C:\Users\Abobich\.gradle\caches\transforms-4\ab5c1e517ba0268b5a72641330ff2c01\transformed\lifecycle-process-2.6.1\AndroidManifest.xml:29:13-31:52
+85                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+85-->[androidx.lifecycle:lifecycle-process:2.6.1] C:\Users\Abobich\.gradle\caches\transforms-4\ab5c1e517ba0268b5a72641330ff2c01\transformed\lifecycle-process-2.6.1\AndroidManifest.xml:30:17-78
+86                android:value="androidx.startup" />
+86-->[androidx.lifecycle:lifecycle-process:2.6.1] C:\Users\Abobich\.gradle\caches\transforms-4\ab5c1e517ba0268b5a72641330ff2c01\transformed\lifecycle-process-2.6.1\AndroidManifest.xml:31:17-49
+87            <meta-data
+87-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:29:13-31:52
+88                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+88-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:30:17-85
+89                android:value="androidx.startup" />
+89-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:31:17-49
+90        </provider>
+91
+92        <service
+92-->[androidx.room:room-runtime:2.6.1] C:\Users\Abobich\.gradle\caches\transforms-4\5f4f67ca00c7784df06fd2a21367a813\transformed\room-runtime-2.6.1\AndroidManifest.xml:24:9-28:63
+93            android:name="androidx.room.MultiInstanceInvalidationService"
+93-->[androidx.room:room-runtime:2.6.1] C:\Users\Abobich\.gradle\caches\transforms-4\5f4f67ca00c7784df06fd2a21367a813\transformed\room-runtime-2.6.1\AndroidManifest.xml:25:13-74
+94            android:directBootAware="true"
+94-->[androidx.room:room-runtime:2.6.1] C:\Users\Abobich\.gradle\caches\transforms-4\5f4f67ca00c7784df06fd2a21367a813\transformed\room-runtime-2.6.1\AndroidManifest.xml:26:13-43
+95            android:exported="false" />
+95-->[androidx.room:room-runtime:2.6.1] C:\Users\Abobich\.gradle\caches\transforms-4\5f4f67ca00c7784df06fd2a21367a813\transformed\room-runtime-2.6.1\AndroidManifest.xml:27:13-37
+96
+97        <receiver
+97-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:34:9-52:20
+98            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+98-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:35:13-76
+99            android:directBootAware="false"
+99-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:36:13-44
+100            android:enabled="true"
+100-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:37:13-35
+101            android:exported="true"
+101-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:38:13-36
+102            android:permission="android.permission.DUMP" >
+102-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:39:13-57
+103            <intent-filter>
+103-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:40:13-42:29
+104                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+104-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:41:17-91
+104-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:41:25-88
+105            </intent-filter>
+106            <intent-filter>
+106-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:43:13-45:29
+107                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+107-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:44:17-85
+107-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:44:25-82
+108            </intent-filter>
+109            <intent-filter>
+109-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:46:13-48:29
+110                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+110-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:47:17-88
+110-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:47:25-85
+111            </intent-filter>
+112            <intent-filter>
+112-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:49:13-51:29
+113                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+113-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:50:17-95
+113-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Abobich\.gradle\caches\transforms-4\da6130bee200b3e740a8ba4b2e253d8e\transformed\profileinstaller-1.3.0\AndroidManifest.xml:50:25-92
+114            </intent-filter>
+115        </receiver>
+116    </application>
+117
+118</manifest>

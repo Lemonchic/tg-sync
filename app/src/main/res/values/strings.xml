@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App identity -->
+    <string name="app_name">Karoo Music</string>
+    <string name="extension_name">Karoo Music Player</string>
+    <string name="data_field_name">Music Player</string>
+
+    <!-- Section headers -->
+    <string name="section_bot_setup">Bot Setup</string>
+    <string name="section_channels">Channels</string>
+    <string name="section_sync">Sync</string>
+    <string name="section_about">About</string>
+
+    <!-- Bot Setup -->
+    <string name="hint_bot_token">Telegram Bot Token</string>
+    <string name="btn_validate">Validate</string>
+    <string name="btn_validating">Validating…</string>
+    <string name="bot_connected_format">Connected as @%s</string>
+    <string name="bot_not_configured">Bot not configured</string>
+    <string name="bot_validation_success">Bot validated successfully!</string>
+    <string name="bot_validation_failed">Validation failed: %s</string>
+    <string name="bot_token_saved">Token saved securely</string>
+    <string name="bot_token_empty">Please enter a bot token</string>
+    <string name="bot_token_invalid_format">Invalid token format. Expected: 123456:ABC-DEF…</string>
+
+    <!-- Channels -->
+    <string name="hint_channel_username">@channelname or t.me/channelname</string>
+    <string name="btn_add_channel">Add Channel</string>
+    <string name="btn_adding_channel">Adding…</string>
+    <string name="channel_added_format">Channel @%s added</string>
+    <string name="channel_add_failed">Failed to add channel: %s</string>
+    <string name="channel_already_exists">Channel already configured</string>
+    <string name="channel_empty_input">Please enter a channel username</string>
+    <string name="channel_invalid_format">Invalid channel format</string>
+    <string name="channel_tracks_format">%d tracks</string>
+    <string name="channel_synced_format">Synced: %s</string>
+    <string name="channel_never_synced">Never synced</string>
+    <string name="channel_info_format">%1$d tracks • %2$s</string>
+    <string name="no_channels_configured">No channels configured yet</string>
+
+    <!-- Channel removal -->
+    <string name="dialog_remove_channel_title">Remove Channel</string>
+    <string name="dialog_remove_channel_message">Remove \"%1$s\" and delete all %2$d downloaded tracks?\n\nThis cannot be undone.</string>
+    <string name="dialog_remove_channel_confirm">Remove</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="channel_removed_format">Channel @%s removed</string>
+
+    <!-- Sync -->
+    <string name="btn_sync_now">Sync Now</string>
+    <string name="btn_cancel_sync">Cancel Sync</string>
+    <string name="sync_disabled_no_token">Set up bot token first</string>
+    <string name="sync_disabled_no_channels">Add at least one channel first</string>
+    <string name="sync_starting">Starting sync…</string>
+    <string name="sync_cancelled">Sync cancelled</string>
+    <string name="sync_complete">Sync complete</string>
+    <string name="sync_failed">Sync failed: %s</string>
+    <string name="sync_channel_progress_format">Syncing @%1$s (%2$d/%3$d)…</string>
+    <string name="sync_downloading_format">Downloading: %s</string>
+    <string name="sync_download_complete_format">✓ %s</string>
+    <string name="sync_download_failed_format">✗ %1$s — %2$s</string>
+    <string name="sync_download_skipped_format">⊘ %s (already downloaded)</string>
+    <string name="sync_summary_format">Downloaded %1$d new tracks, %2$d skipped, %3$d failed</string>
+    <string name="sync_idle">Ready to sync</string>
+
+    <!-- Storage -->
+    <string name="storage_info_format">Used: %1$s / Available: %2$s</string>
+    <string name="storage_unknown">Storage info unavailable</string>
+
+    <!-- About -->
+    <string name="about_version_format">Version %s</string>
+    <string name="about_total_tracks_format">Total tracks: %d</string>
+    <string name="about_total_playlists_format">Playlists: %d</string>
+    <string name="about_storage_used_format">Storage used: %s</string>
+    <string name="btn_clear_all_data">Clear All Data</string>
+
+    <!-- Clear data dialog -->
+    <string name="dialog_clear_data_title">Clear All Data</string>
+    <string name="dialog_clear_data_message">This will delete all channels, tracks, and downloaded files.\n\nThis action cannot be undone.</string>
+    <string name="dialog_clear_data_confirm">Clear Everything</string>
+    <string name="data_cleared">All data cleared</string>
+
+    <!-- Music player field -->
+    <string name="playlist_none">No Playlist</string>
+    <string name="playlist_format">♫  %s</string>
+    <string name="track_no_music">No Music</string>
+    <string name="track_tap_to_sync">Tap to sync tracks in app</string>
+
+    <!-- Content descriptions (accessibility) -->
+    <string name="cd_shuffle">Shuffle</string>
+    <string name="cd_previous">Previous track</string>
+    <string name="cd_play_pause">Play or pause</string>
+    <string name="cd_next">Next track</string>
+    <string name="cd_repeat">Repeat mode</string>
+    <string name="cd_remove_channel">Remove channel</string>
+
+    <!-- Generic -->
+    <string name="ok">OK</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+</resources>
