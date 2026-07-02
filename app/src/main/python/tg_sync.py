@@ -14,6 +14,16 @@ phone_hash_cache = None
 
 def init_client(session_dir):
     global client, loop
+
+    # Monkey-patch Telethon's slow pure-Python AES-IGE with our fast
+    # cryptography-backed implementation BEFORE creating the client
+    try:
+        from fast_ige import patch_telethon
+        result = patch_telethon()
+        print(f"[KarooTgSync] {result}")
+    except Exception as e:
+        print(f"[KarooTgSync] Warning: fast_ige patch failed: {e}")
+
     if not os.path.exists(session_dir):
         os.makedirs(session_dir)
     loop = asyncio.new_event_loop()
@@ -47,6 +57,7 @@ def submit_code(phone, code, password=""):
         return f"Error: {str(e)}"
 
 import re
+import time
 
 async def _sync_single_chat(chat_entity, target_dir, callback):
     if not os.path.exists(target_dir):
@@ -84,13 +95,46 @@ async def _sync_single_chat(chat_entity, target_dir, callback):
             except Exception as e:
                 callback.onProgress(f"Error deleting {lf}: {e}")
 
-    # 2. Download missing files from Telegram
+    # 2. Download missing files from Telegram with speed tracking
     downloaded_count = 0
     for audio in audio_files:
         filename = audio["filename"]
         if filename not in local_files:
-            callback.onProgress(f"Downloading: {filename}...")
-            await client.download_media(audio["msg"], file=os.path.join(target_dir, filename))
+            dl_start = time.time()
+            last_update = [dl_start]
+
+            def make_progress_cb(fname, start_t, last_t):
+                def progress_cb(received, total):
+                    now = time.time()
+                    if now - last_t[0] >= 1.0:
+                        elapsed = now - start_t
+                        speed = received / elapsed if elapsed > 0 else 0
+                        total_mb = total / (1024 * 1024) if total else 0
+                        recv_mb = received / (1024 * 1024)
+                        if speed >= 1_000_000:
+                            speed_str = f"{speed / 1_000_000:.2f} MB/s"
+                        else:
+                            speed_str = f"{speed / 1024:.0f} KB/s"
+                        pct = (received / total * 100) if total else 0
+                        callback.onProgress(
+                            f"  ↓ {fname[:30]}  {recv_mb:.1f}/{total_mb:.1f}MB  {pct:.0f}%  @ {speed_str}"
+                        )
+                        last_t[0] = now
+                return progress_cb
+
+            callback.onProgress(f"Downloading: {filename}")
+            await client.download_media(
+                audio["msg"],
+                file=os.path.join(target_dir, filename),
+                progress_callback=make_progress_cb(filename, dl_start, last_update)
+            )
+            elapsed = time.time() - dl_start
+            avg_speed = os.path.getsize(os.path.join(target_dir, filename)) / elapsed if elapsed > 0 else 0
+            if avg_speed >= 1_000_000:
+                avg_str = f"{avg_speed / 1_000_000:.2f} MB/s"
+            else:
+                avg_str = f"{avg_speed / 1024:.0f} KB/s"
+            callback.onProgress(f"  ✓ Done in {elapsed:.1f}s (avg {avg_str})")
             downloaded_count += 1
 
     callback.onProgress(f"Sync Complete! Downloaded: {downloaded_count}, Deleted: {deleted_count}")
