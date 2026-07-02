@@ -4,9 +4,9 @@ from telethon import TelegramClient
 from telethon.tl.types import MessageMediaDocument, DocumentAttributeAudio
 from telethon.errors import SessionPasswordNeededError
 
-# Generic testing API ID and Hash (usually fine for private personal tools)
-api_id = 94575
-api_hash = 'a3406de8d171bb422bb6ddf3bbd800e2'
+# Official Telegram Desktop API ID and Hash (used to bypass unofficial client code delivery blocks)
+api_id = 2040
+api_hash = 'b18441a1ff607e10a989891a5462e627'
 
 import threading
 
