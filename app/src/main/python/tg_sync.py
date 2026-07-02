@@ -114,9 +114,11 @@ def sync_chat(chat_id, target_dir, callback):
                 
                 music_filter = None
                 for f in filters.filters:
-                    if hasattr(f, 'title') and f.title and f.title.lower() == "music":
-                        music_filter = f
-                        break
+                    if hasattr(f, 'title') and f.title:
+                        title_text = f.title.text if hasattr(f.title, 'text') else str(f.title)
+                        if title_text.lower() == "music":
+                            music_filter = f
+                            break
                 
                 if not music_filter:
                     callback.onProgress("Error: 'Music' folder not found in Telegram.")

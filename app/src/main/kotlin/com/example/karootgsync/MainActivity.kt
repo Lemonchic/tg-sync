@@ -216,6 +216,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun appendLog(msg: String) {
+        android.util.Log.d("KarooTgSync", msg)
         tvLog.append("$msg\n")
         // Scroll to bottom could be added here
     }
