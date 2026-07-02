@@ -191,11 +191,12 @@ class MainActivity : AppCompatActivity() {
                             }
                             val res = module.callAttr("request_code", phoneNumber).toString()
                             withContext(Dispatchers.Main) {
-                                if (res == "SUCCESS") {
+                                if (res.startsWith("SUCCESS")) {
                                     currentStep = AuthStep.CODE
                                     etInput.setText("")
-                                    tvStatus.text = "Code sent to Telegram!"
-                                    appendLog("Code sent to Telegram app.")
+                                    val delivery = res.substringAfter("SUCCESS:", "Telegram App")
+                                    tvStatus.text = "Code sent via $delivery!"
+                                    appendLog("Code sent to $delivery.")
                                 } else {
                                     tvStatus.text = res
                                     appendLog(res)

@@ -25,14 +25,8 @@ def init_client(session_dir):
         print("[KarooTgSync] Client already initialized, skipping duplicate setup")
         return
 
-    # Monkey-patch Telethon's slow pure-Python AES-IGE with our fast
-    # cryptography-backed implementation BEFORE creating the client
-    try:
-        from fast_ige import patch_telethon
-        result = patch_telethon()
-        print(f"[KarooTgSync] {result}")
-    except Exception as e:
-        print(f"[KarooTgSync] Warning: fast_ige patch failed: {e}")
+    # Disabled monkey-patch to prevent login packet corruption
+    print("[KarooTgSync] AES-IGE monkey-patch disabled for safety")
 
     if not os.path.exists(session_dir):
         os.makedirs(session_dir)
@@ -59,7 +53,20 @@ def request_code(phone):
         future = asyncio.run_coroutine_threadsafe(client.send_code_request(phone), loop)
         req = future.result()
         phone_hash_cache = req.phone_code_hash
-        return "SUCCESS"
+        # Extract the type name of SentCodeType (e.g., SentCodeTypeApp, SentCodeTypeSms)
+        delivery_type = "App"
+        if hasattr(req, 'type') and req.type:
+            type_name = type(req.type).__name__
+            if "Sms" in type_name:
+                delivery_type = "SMS"
+            elif "App" in type_name:
+                delivery_type = "Telegram App"
+            elif "Call" in type_name:
+                delivery_type = "Phone Call"
+            else:
+                delivery_type = type_name
+        print(f"[KarooTgSync] Code successfully sent via: {delivery_type}")
+        return f"SUCCESS:{delivery_type}"
     except Exception as e:
         return f"Error: {str(e)}"
 
