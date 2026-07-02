@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.karoo.music.app-mergeDebugResources-2:/values-ldltr-v21/values-ldltr-v21.xml",
+            "outputFile": "com.example.karootgsync.app-mergeDebugResources-2:/values-ldltr-v21/values-ldltr-v21.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Abobich\\.gradle\\caches\\transforms-4\\f4bbfaa71d057b61a53d83420cad2a0d\\transformed\\appcompat-1.6.1\\res\\values-ldltr-v21\\values-ldltr-v21.xml",
+                    "source": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\caches\\transforms-4\\b0e53e03d8f5d2cbefb45b4885832685\\transformed\\appcompat-1.6.1\\res\\values-ldltr-v21\\values-ldltr-v21.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

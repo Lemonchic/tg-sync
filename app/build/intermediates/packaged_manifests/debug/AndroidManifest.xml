@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.karoo.music"
+    package="com.example.karootgsync"
     android:versionCode="1"
-    android:versionName="1.0.0" >
+    android:versionName="1.0" >
 
     <uses-sdk
         android:minSdkVersion="26"
         android:targetSdkVersion="34" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29" />
 
     <permission
-        android:name="com.example.karoo.music.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        android:name="com.example.karootgsync.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.example.karoo.music.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+    <uses-permission android:name="com.example.karootgsync.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
 
     <application
-        android:allowBackup="false"
+        android:allowBackup="true"
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:debuggable="true"
         android:extractNativeLibs="false"
@@ -28,13 +29,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
-
-        <!-- Main settings/sync activity -->
         <activity
-            android:name="com.example.karoo.music.ui.MainActivity"
+            android:name="com.example.karootgsync.MainActivity"
+            android:configChanges="orientation|screenSize"
             android:exported="true"
-            android:label="@string/app_name"
-            android:launchMode="singleTop" >
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,41 +41,9 @@
             </intent-filter>
         </activity>
 
-        <!-- Karoo Extension Service -->
-        <service
-            android:name="com.example.karoo.music.extension.KarooMusicExtension"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="io.hammerhead.karooext.KAROO_EXTENSION" />
-            </intent-filter>
-
-            <meta-data
-                android:name="io.hammerhead.karooext.EXTENSION_INFO"
-                android:resource="@xml/extension_info" />
-        </service>
-
-        <!-- Playback foreground service (wakelock + audio focus) -->
-        <service
-            android:name="com.example.karoo.music.playback.PlaybackService"
-            android:exported="false" />
-
-        <!-- BroadcastReceiver for ride screen control actions -->
-        <receiver
-            android:name="com.example.karoo.music.extension.PlaybackActionReceiver"
-            android:exported="false" >
-            <intent-filter>
-                <action android:name="com.example.karoo.music.ACTION_PLAY_PAUSE" />
-                <action android:name="com.example.karoo.music.ACTION_NEXT" />
-                <action android:name="com.example.karoo.music.ACTION_PREVIOUS" />
-                <action android:name="com.example.karoo.music.ACTION_TOGGLE_SHUFFLE" />
-                <action android:name="com.example.karoo.music.ACTION_TOGGLE_REPEAT" />
-                <action android:name="com.example.karoo.music.ACTION_CYCLE_PLAYLIST" />
-            </intent-filter>
-        </receiver>
-
         <provider
             android:name="androidx.startup.InitializationProvider"
-            android:authorities="com.example.karoo.music.androidx-startup"
+            android:authorities="com.example.karootgsync.androidx-startup"
             android:exported="false" >
             <meta-data
                 android:name="androidx.emoji2.text.EmojiCompatInitializer"
@@ -88,11 +55,6 @@
                 android:name="androidx.profileinstaller.ProfileInstallerInitializer"
                 android:value="androidx.startup" />
         </provider>
-
-        <service
-            android:name="androidx.room.MultiInstanceInvalidationService"
-            android:directBootAware="true"
-            android:exported="false" />
 
         <receiver
             android:name="androidx.profileinstaller.ProfileInstallReceiver"

@@ -34,7 +34,7 @@
         android:id="@+id/etChatId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Chat ID or Username (e.g. @my_music)"
+        android:hint="Chat ID (Leave empty for 'Music' folder)"
         android:inputType="text"
         android:layout_marginBottom="8dp"/>
 

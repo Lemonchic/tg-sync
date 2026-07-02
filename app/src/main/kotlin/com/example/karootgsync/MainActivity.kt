@@ -27,6 +27,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnSync: Button
     private lateinit var tvLog: TextView
 
+    private var phoneNumber: String = ""
+    enum class AuthStep {
+        PHONE, CODE, PASSWORD, READY
+    }
+    private var currentStep = AuthStep.PHONE
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -61,15 +67,36 @@ class MainActivity : AppCompatActivity() {
             if (!Python.isStarted()) {
                 Python.start(AndroidPlatform(this))
             }
-            val py = Python.getInstance()
-            val module = py.getModule("tg_sync")
             
-            // Initialize Telethon client
-            val sessionDir = File(filesDir, "tg_sessions").absolutePath
-            module.callAttr("init_client", sessionDir)
-            
-            tvStatus.text = "TDLib Status: Ready / Waiting for Login"
-            appendLog("Python initialized successfully.")
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val py = Python.getInstance()
+                    val module = py.getModule("tg_sync")
+                    
+                    // Initialize Telethon client
+                    val sessionDir = File(filesDir, "tg_sessions").absolutePath
+                    module.callAttr("init_client", sessionDir)
+                    
+                    val isAuthorized = module.callAttr("is_authorized").toBoolean()
+                    withContext(Dispatchers.Main) {
+                        if (isAuthorized) {
+                            currentStep = AuthStep.READY
+                            tvStatus.text = "Logged In!"
+                            appendLog("Logged into Telegram.")
+                        } else {
+                            currentStep = AuthStep.PHONE
+                            tvStatus.text = "Waiting for Login"
+                            etInput.hint = "Enter Phone Number (e.g. +1...)"
+                            appendLog("Please log in with your phone number.")
+                        }
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        tvStatus.text = "Initialization Error"
+                        appendLog("Error: ${e.message}")
+                    }
+                }
+            }
         } catch (e: Exception) {
             tvStatus.text = "Initialization Error"
             appendLog("Error: ${e.message}")
@@ -86,37 +113,63 @@ class MainActivity : AppCompatActivity() {
                     val py = Python.getInstance()
                     val module = py.getModule("tg_sync")
 
-                    // Simple state machine based on input
-                    if (input.startsWith("+")) {
-                        // It's a phone number
-                        withContext(Dispatchers.Main) { appendLog("Requesting code for $input...") }
-                        val res = module.callAttr("request_code", input).toString()
-                        withContext(Dispatchers.Main) {
-                            if (res == "SUCCESS") {
-                                tvStatus.text = "Waiting for Code"
-                                etInput.setText("")
-                                etInput.hint = "Enter Telegram Code"
-                                appendLog("Code sent to Telegram app.")
-                            } else {
-                                appendLog(res)
+                    when (currentStep) {
+                        AuthStep.PHONE -> {
+                            phoneNumber = input
+                            withContext(Dispatchers.Main) { appendLog("Requesting code for $phoneNumber...") }
+                            val res = module.callAttr("request_code", phoneNumber).toString()
+                            withContext(Dispatchers.Main) {
+                                if (res == "SUCCESS") {
+                                    currentStep = AuthStep.CODE
+                                    tvStatus.text = "Waiting for Code"
+                                    etInput.setText("")
+                                    etInput.hint = "Enter Telegram Code"
+                                    appendLog("Code sent to Telegram app.")
+                                } else {
+                                    appendLog(res)
+                                }
                             }
                         }
-                    } else {
-                        // It's a code
-                        withContext(Dispatchers.Main) { appendLog("Submitting code...") }
-                        val phone = "" // In a real app we'd save the phone number state, but our python script submits it.
-                        // Wait, submit_code in python needs the phone number. Let's adjust the python script to not need phone for sign_in if we already have the request? 
-                        // Actually, telethon sign_in requires phone. Let's fix this by keeping the phone number in Kotlin.
-                        // For now, I will modify the python script to remember the phone number.
-                        val res = module.callAttr("submit_code", "dummy", input, "").toString()
-                        withContext(Dispatchers.Main) {
-                            if (res == "SUCCESS") {
-                                tvStatus.text = "Logged In!"
-                                etInput.setText("")
-                                appendLog("Login successful!")
-                            } else {
-                                appendLog(res)
+                        AuthStep.CODE -> {
+                            withContext(Dispatchers.Main) { appendLog("Submitting code...") }
+                            val res = module.callAttr("submit_code", phoneNumber, input, "").toString()
+                            withContext(Dispatchers.Main) {
+                                when (res) {
+                                    "SUCCESS" -> {
+                                        currentStep = AuthStep.READY
+                                        tvStatus.text = "Logged In!"
+                                        etInput.setText("")
+                                        appendLog("Login successful!")
+                                    }
+                                    "PASSWORD_NEEDED" -> {
+                                        currentStep = AuthStep.PASSWORD
+                                        tvStatus.text = "Enter 2FA Password"
+                                        etInput.setText("")
+                                        etInput.hint = "Enter 2FA Password"
+                                        appendLog("2-Factor Authentication enabled. Please enter your password:")
+                                    }
+                                    else -> {
+                                        appendLog(res)
+                                    }
+                                }
                             }
+                        }
+                        AuthStep.PASSWORD -> {
+                            withContext(Dispatchers.Main) { appendLog("Submitting password...") }
+                            val res = module.callAttr("submit_code", phoneNumber, "", input).toString()
+                            withContext(Dispatchers.Main) {
+                                if (res == "SUCCESS") {
+                                    currentStep = AuthStep.READY
+                                    tvStatus.text = "Logged In!"
+                                    etInput.setText("")
+                                    appendLog("Login successful!")
+                                } else {
+                                    appendLog(res)
+                                }
+                            }
+                        }
+                        AuthStep.READY -> {
+                            withContext(Dispatchers.Main) { appendLog("Already logged in.") }
                         }
                     }
                 } catch (e: Exception) {
@@ -127,17 +180,18 @@ class MainActivity : AppCompatActivity() {
 
         btnSync.setOnClickListener {
             val chatId = etChatId.text.toString().trim()
+            val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
+            
+            val targetDir: String
             if (chatId.isEmpty()) {
-                appendLog("Please enter a chat ID or username.")
-                return@setOnClickListener
+                targetDir = musicDir.absolutePath
+                appendLog("Starting sync for all chats in Telegram 'Music' folder...")
+            } else {
+                targetDir = File(musicDir, chatId.replace("@", "")).absolutePath
+                appendLog("Starting sync for $chatId...")
             }
 
             btnSync.isEnabled = false
-            appendLog("Starting sync for $chatId...")
-
-            // Define target directory: /Music/<chatId>
-            val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
-            val targetDir = File(musicDir, chatId.replace("@", "")).absolutePath
 
             CoroutineScope(Dispatchers.IO).launch {
                 try {

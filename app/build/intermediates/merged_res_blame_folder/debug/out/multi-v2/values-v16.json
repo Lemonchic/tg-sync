@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.karoo.music.app-mergeDebugResources-2:/values-v16/values-v16.xml",
+            "outputFile": "com.example.karootgsync.app-mergeDebugResources-2:/values-v16/values-v16.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Abobich\\.gradle\\caches\\transforms-4\\f4bbfaa71d057b61a53d83420cad2a0d\\transformed\\appcompat-1.6.1\\res\\values-v16\\values-v16.xml",
+                    "source": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\caches\\transforms-4\\b0e53e03d8f5d2cbefb45b4885832685\\transformed\\appcompat-1.6.1\\res\\values-v16\\values-v16.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -12,24 +12,6 @@
                         "endLines": "5",
                         "endColumns": "12",
                         "endOffsets": "223"
-                    },
-                    "to": {
-                        "startLines": "3",
-                        "startColumns": "4",
-                        "startOffsets": "121",
-                        "endLines": "6",
-                        "endColumns": "12",
-                        "endOffsets": "289"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Abobich\\.gradle\\caches\\transforms-4\\af9c63df93fa6afa37bd680a89107361\\transformed\\core-1.12.0\\res\\values-v16\\values-v16.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "65",
-                        "endOffsets": "116"
                     }
                 }
             ]

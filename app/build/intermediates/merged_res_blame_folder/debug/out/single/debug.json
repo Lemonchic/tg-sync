@@ -1,74 +1,74 @@
 [
     {
-        "merged": "com.example.karoo.music.app-merged_res-4:/layout_music_player_field.xml.flat",
-        "source": "com.example.karoo.music.app-main-6:/layout/music_player_field.xml"
+        "merged": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-merged_res-4:\\mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-main-6:\\mipmap-anydpi-v26\\ic_launcher.xml"
     },
     {
-        "merged": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-merged_res-4:\\mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-main-6:\\mipmap-anydpi-v26\\ic_launcher.xml"
+        "merged": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-merged_res-4:\\drawable_ic_delete.xml.flat",
+        "source": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-main-6:\\drawable\\ic_delete.xml"
     },
     {
-        "merged": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-merged_res-4:\\drawable_ic_repeat.xml.flat",
-        "source": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-main-6:\\drawable\\ic_repeat.xml"
+        "merged": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-merged_res-4:\\xml_extension_info.xml.flat",
+        "source": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-main-6:\\xml\\extension_info.xml"
     },
     {
-        "merged": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-merged_res-4:\\drawable_ic_pause.xml.flat",
-        "source": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-main-6:\\drawable\\ic_pause.xml"
+        "merged": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-merged_res-4:\\layout_music_player_field.xml.flat",
+        "source": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-main-6:\\layout\\music_player_field.xml"
     },
     {
-        "merged": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-merged_res-4:\\drawable_ic_shuffle.xml.flat",
-        "source": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-main-6:\\drawable\\ic_shuffle.xml"
+        "merged": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-merged_res-4:\\drawable_ic_launcher_foreground.xml.flat",
+        "source": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-main-6:\\drawable\\ic_launcher_foreground.xml"
     },
     {
-        "merged": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-merged_res-4:\\drawable_ic_launcher_foreground.xml.flat",
-        "source": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-main-6:\\drawable\\ic_launcher_foreground.xml"
+        "merged": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-merged_res-4:\\drawable_ic_launcher_background.xml.flat",
+        "source": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-main-6:\\drawable\\ic_launcher_background.xml"
     },
     {
-        "merged": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-merged_res-4:\\drawable_ic_play.xml.flat",
-        "source": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-main-6:\\drawable\\ic_play.xml"
+        "merged": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-merged_res-4:\\drawable_ic_shuffle.xml.flat",
+        "source": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-main-6:\\drawable\\ic_shuffle.xml"
     },
     {
-        "merged": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-merged_res-4:\\layout_activity_main.xml.flat",
-        "source": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-main-6:\\layout\\activity_main.xml"
+        "merged": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-merged_res-4:\\drawable_ic_previous.xml.flat",
+        "source": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-main-6:\\drawable\\ic_previous.xml"
     },
     {
-        "merged": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-merged_res-4:\\xml_extension_info.xml.flat",
-        "source": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-main-6:\\xml\\extension_info.xml"
+        "merged": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-merged_res-4:\\drawable_ic_repeat_one.xml.flat",
+        "source": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-main-6:\\drawable\\ic_repeat_one.xml"
     },
     {
-        "merged": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-merged_res-4:\\drawable_ic_delete.xml.flat",
-        "source": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-main-6:\\drawable\\ic_delete.xml"
+        "merged": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-merged_res-4:\\drawable_ic_music_note.xml.flat",
+        "source": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-main-6:\\drawable\\ic_music_note.xml"
     },
     {
-        "merged": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-merged_res-4:\\drawable_field_button_background.xml.flat",
-        "source": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-main-6:\\drawable\\field_button_background.xml"
+        "merged": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-merged_res-4:\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-main-6:\\layout\\activity_main.xml"
     },
     {
-        "merged": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-merged_res-4:\\drawable_ic_music_note.xml.flat",
-        "source": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-main-6:\\drawable\\ic_music_note.xml"
+        "merged": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-merged_res-4:\\drawable_ic_next.xml.flat",
+        "source": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-main-6:\\drawable\\ic_next.xml"
     },
     {
-        "merged": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-merged_res-4:\\drawable_ic_repeat_one.xml.flat",
-        "source": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-main-6:\\drawable\\ic_repeat_one.xml"
+        "merged": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-merged_res-4:\\drawable_field_button_background.xml.flat",
+        "source": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-main-6:\\drawable\\field_button_background.xml"
     },
     {
-        "merged": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-merged_res-4:\\drawable_ic_launcher_background.xml.flat",
-        "source": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-main-6:\\drawable\\ic_launcher_background.xml"
+        "merged": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-merged_res-4:\\drawable_ic_play.xml.flat",
+        "source": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-main-6:\\drawable\\ic_play.xml"
     },
     {
-        "merged": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-merged_res-4:\\layout_music_player_field.xml.flat",
-        "source": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-main-6:\\layout\\music_player_field.xml"
+        "merged": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-merged_res-4:\\drawable_ic_pause.xml.flat",
+        "source": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-main-6:\\drawable\\ic_pause.xml"
     },
     {
-        "merged": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-merged_res-4:\\drawable_ic_previous.xml.flat",
-        "source": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-main-6:\\drawable\\ic_previous.xml"
+        "merged": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-merged_res-4:\\layout_item_channel.xml.flat",
+        "source": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-main-6:\\layout\\item_channel.xml"
     },
     {
-        "merged": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-merged_res-4:\\drawable_ic_next.xml.flat",
-        "source": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-main-6:\\drawable\\ic_next.xml"
+        "merged": "com.example.karootgsync.app-merged_res-4:/layout_activity_main.xml.flat",
+        "source": "com.example.karootgsync.app-main-6:/layout/activity_main.xml"
     },
     {
-        "merged": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-merged_res-4:\\layout_item_channel.xml.flat",
-        "source": "C:\\Users\\Abobich\\.gradle\\daemon\\8.6\\com.example.karoo.music.app-main-6:\\layout\\item_channel.xml"
+        "merged": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-merged_res-4:\\drawable_ic_repeat.xml.flat",
+        "source": "C:\\Users\\Abobich\\scoop\\apps\\gradle\\current\\.gradle\\daemon\\8.6\\com.example.karootgsync.app-main-6:\\drawable\\ic_repeat.xml"
     }
 ]
