@@ -21,7 +21,7 @@
 ## 📦 Installation
 
 1. Connect your Karoo device to your computer via USB (ensure ADB is enabled in Developer Options).
-2. Download the pre-built release package [tg-sync-release.apk](./tg-sync-release.apk) from the root of this repository.
+2. Download the pre-built release package [tg-sync-release.apk](https://github.com/Lemonchic/tg-sync/releases/download/v1.0.0/tg-sync-release.apk) from the official GitHub Release page.
 3. Install the APK by running the following command in your terminal:
    ```bash
    adb install -r tg-sync-release.apk
