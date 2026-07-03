@@ -7,6 +7,21 @@ from telethon import TelegramClient
 from telethon.tl.types import MessageMediaDocument, DocumentAttributeAudio
 from telethon.errors import SessionPasswordNeededError
 
+class SyncCancelledError(Exception):
+    pass
+
+is_sync_cancelled = False
+
+def cancel_sync():
+    global is_sync_cancelled
+    is_sync_cancelled = True
+    print("[KarooTgSync] Sync cancellation requested")
+
+def reset_sync_cancel():
+    global is_sync_cancelled
+    is_sync_cancelled = False
+    print("[KarooTgSync] Sync cancellation reset")
+
 # Official Telegram Desktop API ID and Hash (used to bypass unofficial client code delivery blocks)
 api_id = 2040
 api_hash = 'b18441a1ff607e10a989891a5462e627'
@@ -129,6 +144,8 @@ async def _sync_single_chat(chat_entity, target_dir, callback):
     downloaded_count = 0
     total_tracks = len(audio_files)
     for idx, audio in enumerate(audio_files):
+        if is_sync_cancelled:
+            raise SyncCancelledError("Sync stopped by user")
         filename = audio["filename"]
         size = audio["size"]
         local_path = os.path.join(target_dir, filename)
@@ -152,6 +169,8 @@ async def _sync_single_chat(chat_entity, target_dir, callback):
             def make_progress_cb(fname, start_t, last_t, track_num, total_num):
                 last_bytes = [0]
                 def progress_cb(received, total, active_conns=0):
+                    if is_sync_cancelled:
+                        raise SyncCancelledError("Sync stopped by user")
                     now = time.time()
                     dt = now - last_t[0]
                     if dt >= 1.0:
@@ -183,6 +202,14 @@ async def _sync_single_chat(chat_entity, target_dir, callback):
                         out_f,
                         progress_callback=make_progress_cb(filename, dl_start, last_update, idx+1, total_tracks)
                     )
+            except SyncCancelledError as e:
+                callback.onProgress(f"  ✗ Sync Stopped. Deleting incomplete download: {filename}")
+                if os.path.exists(filepath):
+                    try:
+                        os.remove(filepath)
+                    except:
+                        pass
+                raise e
             except Exception as e:
                 callback.onProgress(f"  ✗ Error downloading {filename}: {e}")
                 if os.path.exists(filepath):
@@ -349,6 +376,8 @@ def sync_chat(chat_id, target_dir, callback):
                 except Exception as e:
                     await _sync_single_chat(chat_id, target_dir, callback)
 
+        except SyncCancelledError:
+            callback.onProgress("Sync Stopped.")
         except Exception as e:
             callback.onProgress(f"Error during sync: {str(e)}")
 

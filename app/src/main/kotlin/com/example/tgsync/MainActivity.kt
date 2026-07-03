@@ -18,9 +18,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import com.example.tgsync.R
+import android.content.res.ColorStateList
 
 class MainActivity : AppCompatActivity() {
 
+    private var isSyncing = false
     private lateinit var tvStatus: TextView
     private lateinit var etInput: EditText
     private lateinit var btnSubmit: Button
@@ -318,6 +320,7 @@ class MainActivity : AppCompatActivity() {
         btnConfirmExit.setOnClickListener {
             layoutConfirmExit.visibility = android.view.View.GONE
             finishAndRemoveTask()
+            android.os.Process.killProcess(android.os.Process.myPid())
         }
 
         btnConfirmLogout.setOnClickListener {
@@ -346,14 +349,33 @@ class MainActivity : AppCompatActivity() {
         btnSync.setOnClickListener {
             val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
             val targetDir = musicDir.absolutePath
-            appendLog("Starting sync for all chats in Telegram 'Music' folder...")
 
-            btnSync.isEnabled = false
+            if (isSyncing) {
+                appendLog("Stopping sync...")
+                btnSync.text = "STOPPING..."
+                btnSync.isEnabled = false
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        val py = Python.getInstance()
+                        val module = py.getModule("tg_sync")
+                        module.callAttr("cancel_sync")
+                    } catch (e: Exception) {
+                        runOnUiThread { appendLog("Cancel Error: ${e.message}") }
+                    }
+                }
+                return@setOnClickListener
+            }
+
+            isSyncing = true
+            btnSync.text = "STOP SYNC"
+            btnSync.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.button_cancel))
+            appendLog("Starting sync for all chats in Telegram 'Music' folder...")
 
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val py = Python.getInstance()
                     val module = py.getModule("tg_sync")
+                    module.callAttr("reset_sync_cancel")
                     
                     val callback = object : SyncCallback {
                         override fun onProgress(message: String) {
@@ -366,7 +388,12 @@ class MainActivity : AppCompatActivity() {
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) { appendLog("Sync Error: ${e.message}") }
                 } finally {
-                    withContext(Dispatchers.Main) { btnSync.isEnabled = true }
+                    withContext(Dispatchers.Main) {
+                        isSyncing = false
+                        btnSync.text = "SYNC NOW"
+                        btnSync.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this@MainActivity, R.color.primary))
+                        btnSync.isEnabled = true
+                    }
                 }
             }
         }
