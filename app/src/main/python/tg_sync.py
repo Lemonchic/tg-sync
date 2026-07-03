@@ -31,9 +31,11 @@ import threading
 client = None
 loop = None
 phone_hash_cache = None
+_session_dir_cache = None
 
 def init_client(session_dir):
-    global client, loop
+    global client, loop, _session_dir_cache
+    _session_dir_cache = session_dir
     if client is not None:
         print("[KarooTgSync] Client already initialized, skipping duplicate setup")
         return
@@ -397,9 +399,12 @@ def logout():
         return "SUCCESS"
     try:
         loop.run_until_complete(client.log_out())
-        return "SUCCESS"
-    except Exception as e:
-        return f"Error: {str(e)}"
+    except Exception:
+        pass
+    
+    if _session_dir_cache:
+        return reset_client(_session_dir_cache)
+    return "SUCCESS"
 
 def reset_client(session_dir):
     global client, loop
