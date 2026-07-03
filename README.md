@@ -1,6 +1,11 @@
 # Karoo Telegram Sync Utility
 
-A lightweight, high-performance Android utility app designed for Hammerhead Karoo cycling computers. It synchronizes audio files from a specific Telegram folder directly to the Karoo's local music directory for offline playback during your rides.
+> [!IMPORTANT]
+> **Core Concept:** This utility mirrors your Telegram **`Music`** chat folder directly to your Android device's standard **`/Music/`** directory.
+>
+> **⚠️ ATTENTION WARNING:**
+> - **Two-way Cleanup:** During sync, the app will automatically delete files inside synced folders if they are removed from the corresponding Telegram channels. It will also delete synced channel folders on the device if they are removed from your Telegram `Music` folder.
+> - **Safety of Personal Music:** Any pre-existing music files or folders in your device's `/Music/` directory that were *not* created by this app (meaning they do not contain a `.tg_channel_id` file) are **completely safe** and will not be touched or deleted.
 
 ---
 
