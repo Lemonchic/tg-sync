@@ -120,21 +120,21 @@ class MainActivity : AppCompatActivity() {
                 val inputLayout = findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.inputLayout)
                 when (currentStep) {
                     AuthStep.PHONE -> {
-                        tvStatus.text = "Waiting for Login"
+                        tvStatus.text = "Waiting for Login\n(Example: +380XXXXXXXXX)"
                         inputLayout.hint = "Enter Phone Number"
-                        etInput.hint = "Enter Phone Number"
+                        inputLayout.helperText = ""
                         btnBackToPhone.visibility = android.view.View.GONE
                     }
                     AuthStep.CODE -> {
                         tvStatus.text = "Code sent via $deliveryMethod\nto: $phoneNumber"
                         inputLayout.hint = "Enter Telegram Code"
-                        etInput.hint = "Enter Telegram Code"
+                        inputLayout.helperText = ""
                         btnBackToPhone.visibility = android.view.View.VISIBLE
                     }
                     AuthStep.PASSWORD -> {
                         tvStatus.text = "2FA Password Required\nfor: $phoneNumber"
                         inputLayout.hint = "Enter 2FA Password"
-                        etInput.hint = "Enter 2FA Password"
+                        inputLayout.helperText = ""
                         btnBackToPhone.visibility = android.view.View.VISIBLE
                     }
                     else -> {}
